@@ -34,6 +34,8 @@ public class DrawFrustum : MonoBehaviour
         if (nearClip == null)
             return;
 
+        Vector3 center = transform.forward;
+
         nearClip.positionCount = 4;
         nearClip.startWidth = lineWidth;
         nearClip.endWidth = lineWidth;
@@ -43,14 +45,10 @@ public class DrawFrustum : MonoBehaviour
         nearClip.SetPositions(
             new Vector3[]
             {
-                Vector3.up + Vector3.left +
-                    transform.position + transform.forward * frustum.NearClipDistance,
-                Vector3.up + Vector3.right +
-                    transform.position + transform.forward * frustum.NearClipDistance,
-                Vector3.down + Vector3.right +               
-                    transform.position + transform.forward * frustum.NearClipDistance,
-                Vector3.down + Vector3.left +                
-                    transform.position + transform.forward * frustum.NearClipDistance
+                frustum.NearClip.topLeft,
+                frustum.NearClip.topRight,
+                frustum.NearClip.bttRight,
+                frustum.NearClip.bttLeft
             }
             );
     }
@@ -69,14 +67,10 @@ public class DrawFrustum : MonoBehaviour
         farClip.SetPositions(
             new Vector3[]
             {
-                Vector3.up + Vector3.left +
-                    transform.position + transform.forward * frustum.FarClipDistance,
-                Vector3.up + Vector3.right +                 
-                    transform.position + transform.forward * frustum.FarClipDistance,
-                Vector3.down + Vector3.right +               
-                    transform.position + transform.forward * frustum.FarClipDistance,
-                Vector3.down + Vector3.left +                
-                    transform.position + transform.forward * frustum.FarClipDistance
+                frustum.FarClip.topLeft,
+                frustum.FarClip.topRight,
+                frustum.FarClip.bttRight,
+                frustum.FarClip.bttLeft
             }
             );
     }
