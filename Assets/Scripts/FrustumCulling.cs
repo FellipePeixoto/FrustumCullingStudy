@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PlaneStruct
+{
+    public float height;
+    public float width;
+    public Vector3 center;
+    public Vector3 topLeft;
+    public Vector3 topRight;
+    public Vector3 bttRight;
+    public Vector3 bttLeft;
+}
+
 [ExecuteInEditMode]
 public class FrustumCulling : MonoBehaviour
 {
@@ -9,32 +20,37 @@ public class FrustumCulling : MonoBehaviour
     [SerializeField] float ratio;
     [SerializeField] float nearClipDistance;
     [SerializeField] float farClipDistance;
+    [SerializeField] bool isEnabled;
 
-    bool enabled;
-    public class PlaneStruct
-    {
-        public float height;
-        public float width;
-        public Vector3 center;
-        public Vector3 topLeft;
-        public Vector3 topRight;
-        public Vector3 bttRight;
-        public Vector3 bttLeft;
-    }
     PlaneStruct nearClip;
     PlaneStruct farClip;
+    PlaneStruct top;
+    PlaneStruct right;
+    PlaneStruct bottom;
+    PlaneStruct left;
 
     public float FieldOfView { get => fieldOfView; }
     public float NearClipDistance { get => nearClipDistance; }
     public float FarClipDistance { get => farClipDistance; }
-    public bool Enabled { get => enabled; }
-    public PlaneStruct NearClip { get => nearClip; set => nearClip = value; }
-    public PlaneStruct FarClip { get => farClip; set => farClip = value; }
+    public bool IsEnabled { get => isEnabled; }
+    public PlaneStruct NearClip { get => nearClip; }
+    public PlaneStruct FarClip { get => farClip; }
+    public PlaneStruct Top { get => top; }
+    public PlaneStruct Right { get => right; }
+    public PlaneStruct Bottom { get => bottom; }
+    public PlaneStruct Left { get => left; }
 
     private void Update()
     {
         nearClip = new PlaneStruct();
         farClip = new PlaneStruct();
+        top = new PlaneStruct();
+        right = new PlaneStruct();
+        bottom = new PlaneStruct();
+        left = new PlaneStruct();
+
+        if (!isEnabled)
+            return;
 
         nearClip.height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * nearClipDistance;
         nearClip.width = nearClip.height * ratio;
@@ -53,5 +69,25 @@ public class FrustumCulling : MonoBehaviour
         farClip.topRight = farClip.center + (transform.up * farClip.height / 2) + (transform.right * farClip.width / 2);
         farClip.bttRight = farClip.center - (transform.up * farClip.height / 2) + (transform.right * farClip.width / 2);
         farClip.bttLeft = farClip.center - (transform.up * farClip.height / 2) - (transform.right * farClip.width / 2);
+
+        top.topLeft = farClip.topLeft;
+        top.topRight = farClip.topRight;
+        top.bttRight = nearClip.topRight;
+        top.bttLeft = nearClip.topLeft;
+
+        right.topLeft = farClip.topRight;
+        right.topRight = farClip.bttRight;
+        right.bttRight = nearClip.bttRight;
+        right.bttLeft = nearClip.topRight;
+
+        bottom.topLeft = farClip.bttLeft;
+        bottom.topRight = farClip.bttRight;
+        bottom.bttRight = nearClip.bttRight;
+        bottom.bttLeft = nearClip.bttLeft;
+
+        left.topLeft = farClip.bttLeft;
+        left.topRight = farClip.topLeft;
+        left.bttRight = nearClip.topLeft;
+        left.bttLeft = nearClip.bttLeft;
     }
 }

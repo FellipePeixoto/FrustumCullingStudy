@@ -8,6 +8,10 @@ public class DrawFrustum : MonoBehaviour
     [SerializeField] FrustumCulling frustum;
     [SerializeField] LineRenderer nearClip;
     [SerializeField] LineRenderer farClip;
+    [SerializeField] LineRenderer top;
+    [SerializeField] LineRenderer right;
+    [SerializeField] LineRenderer bottom;
+    [SerializeField] LineRenderer left;
     [SerializeField] float lineWidth;
 
     private void Update()
@@ -15,62 +19,40 @@ public class DrawFrustum : MonoBehaviour
         if (frustum == null)
             return;
 
-        if (!frustum.enabled)
-        {
-            nearClip.enabled = false;
-            farClip.enabled = false;
+        if (!frustum.IsEnabled)
             return;
-        }
 
         nearClip.enabled = true;
         farClip.enabled = true;
 
-        DrawNearClip();
-        DrawFarClip();
+        DrawPlane(nearClip, frustum.NearClip);
+        DrawPlane(farClip, frustum.FarClip);
+        DrawPlane(top, frustum.Top);
+        DrawPlane(right, frustum.Right);
+        DrawPlane(bottom, frustum.Bottom);
+        DrawPlane(left, frustum.Left);
     }
 
-    public void DrawNearClip()
+    public void DrawPlane(LineRenderer lineRenderer, PlaneStruct planeStr)
     {
         if (nearClip == null)
             return;
 
         Vector3 center = transform.forward;
 
-        nearClip.positionCount = 4;
-        nearClip.startWidth = lineWidth;
-        nearClip.endWidth = lineWidth;
-        nearClip.material = Resources.Load<Material>("Materials/NearClip");
-        nearClip.loop = true;
+        lineRenderer.positionCount = 4;
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.material = Resources.Load<Material>("Materials/NearClip");
+        lineRenderer.loop = true;
 
-        nearClip.SetPositions(
+        lineRenderer.SetPositions(
             new Vector3[]
             {
-                frustum.NearClip.topLeft,
-                frustum.NearClip.topRight,
-                frustum.NearClip.bttRight,
-                frustum.NearClip.bttLeft
-            }
-            );
-    }
-
-    public void DrawFarClip()
-    {
-        if (farClip == null)
-            return;
-
-        farClip.positionCount = 4;
-        farClip.startWidth = lineWidth;
-        farClip.endWidth = lineWidth;
-        farClip.material = Resources.Load<Material>("Materials/NearClip");
-        farClip.loop = true;
-        
-        farClip.SetPositions(
-            new Vector3[]
-            {
-                frustum.FarClip.topLeft,
-                frustum.FarClip.topRight,
-                frustum.FarClip.bttRight,
-                frustum.FarClip.bttLeft
+                planeStr.topLeft,
+                planeStr.topRight,
+                planeStr.bttRight,
+                planeStr.bttLeft
             }
             );
     }
