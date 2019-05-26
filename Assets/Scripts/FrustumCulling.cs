@@ -19,10 +19,27 @@ public class PlaneStruct
             return dir.normalized;
         }
     }
+    public float Plane
+    {
+        get
+        {
+            return Vector3.Dot(-Normal, center);
+        }
+    }
     
     public void CalcCenter()
     {
         center = (topLeft + topRight + bttRight + bttLeft) / 4;
+    }
+
+    public float DistanceNormalNegative(Vector3 point)
+    {
+        return Vector3.Dot(-Normal, point);
+    }
+
+    public float DistanceNormalPositive(Vector3 point)
+    {
+        return Vector3.Dot(Normal, point);
     }
 }
 
@@ -35,6 +52,7 @@ public class FrustumCulling : MonoBehaviour
     [SerializeField] float farClipDistance;
     [SerializeField] bool isEnabled;
 
+    PlaneStruct[] planes = new PlaneStruct[6];
     PlaneStruct nearClip;
     PlaneStruct farClip;
     PlaneStruct top;
@@ -106,5 +124,11 @@ public class FrustumCulling : MonoBehaviour
         left.bttRight = nearClip.topLeft;
         left.bttLeft = nearClip.bttLeft;
         left.CalcCenter();
+
+        var bdnSphere = FindObjectsOfType<BoundingSphere>();
+
+        foreach(BoundingSphere b in bdnSphere)
+        {
+        }
     }
 }
