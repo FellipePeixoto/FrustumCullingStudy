@@ -31,6 +31,13 @@ public class DrawFrustum : MonoBehaviour
         DrawPlane(right, frustum.Right);
         DrawPlane(bottom, frustum.Bottom);
         DrawPlane(left, frustum.Left);
+
+        Debug.DrawLine(frustum.Right.center, frustum.Right.center + (-frustum.Right.Normal));
+        Debug.DrawLine(frustum.Left.center, frustum.Left.center + (-frustum.Left.Normal));
+        Debug.DrawLine(frustum.Top.center, frustum.Top.center + (-frustum.Top.Normal));
+        Debug.DrawLine(frustum.Bottom.center, frustum.Bottom.center + (frustum.Bottom.Normal));
+        Debug.DrawLine(frustum.NearClip.center, frustum.NearClip.center + (-frustum.NearClip.Normal));
+        Debug.DrawLine(frustum.FarClip.center, frustum.FarClip.center + (frustum.FarClip.Normal));
     }
 
     public void DrawPlane(LineRenderer lineRenderer, PlaneStruct planeStr)

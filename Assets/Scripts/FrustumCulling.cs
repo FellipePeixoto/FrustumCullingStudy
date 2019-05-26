@@ -11,6 +11,19 @@ public class PlaneStruct
     public Vector3 topRight;
     public Vector3 bttRight;
     public Vector3 bttLeft;
+    public Vector3 Normal
+    {
+        get
+        {
+            Vector3 dir = Vector3.Cross(topRight - topLeft, bttRight - topRight);
+            return dir.normalized;
+        }
+    }
+    
+    public void CalcCenter()
+    {
+        center = (topLeft + topRight + bttRight + bttLeft) / 4;
+    }
 }
 
 [ExecuteInEditMode]
@@ -59,10 +72,10 @@ public class FrustumCulling : MonoBehaviour
         farClip.width = farClip.height * ratio;
 
         nearClip.center = transform.position + transform.forward.normalized * nearClipDistance;
-        nearClip.topLeft = nearClip.center + (transform.up * nearClip.height/2) - (transform.right * nearClip.width / 2);
-        nearClip.topRight = nearClip.center + (transform.up * nearClip.height/2) + (transform.right * nearClip.width / 2);
-        nearClip.bttRight = nearClip.center - (transform.up * nearClip.height/2) + (transform.right * nearClip.width / 2);
-        nearClip.bttLeft = nearClip.center - (transform.up * nearClip.height/2) - (transform.right * nearClip.width / 2);
+        nearClip.topLeft = nearClip.center + (transform.up * nearClip.height / 2) - (transform.right * nearClip.width / 2);
+        nearClip.topRight = nearClip.center + (transform.up * nearClip.height / 2) + (transform.right * nearClip.width / 2);
+        nearClip.bttRight = nearClip.center - (transform.up * nearClip.height / 2) + (transform.right * nearClip.width / 2);
+        nearClip.bttLeft = nearClip.center - (transform.up * nearClip.height / 2) - (transform.right * nearClip.width / 2);
 
         farClip.center = transform.position + transform.forward.normalized * farClipDistance;
         farClip.topLeft = farClip.center + (transform.up * farClip.height / 2) - (transform.right * farClip.width / 2);
@@ -74,20 +87,24 @@ public class FrustumCulling : MonoBehaviour
         top.topRight = farClip.topRight;
         top.bttRight = nearClip.topRight;
         top.bttLeft = nearClip.topLeft;
+        top.CalcCenter();
 
         right.topLeft = farClip.topRight;
         right.topRight = farClip.bttRight;
         right.bttRight = nearClip.bttRight;
         right.bttLeft = nearClip.topRight;
+        right.CalcCenter();
 
         bottom.topLeft = farClip.bttLeft;
         bottom.topRight = farClip.bttRight;
         bottom.bttRight = nearClip.bttRight;
         bottom.bttLeft = nearClip.bttLeft;
+        bottom.CalcCenter();
 
         left.topLeft = farClip.bttLeft;
         left.topRight = farClip.topLeft;
         left.bttRight = nearClip.topLeft;
         left.bttLeft = nearClip.bttLeft;
+        left.CalcCenter();
     }
 }
