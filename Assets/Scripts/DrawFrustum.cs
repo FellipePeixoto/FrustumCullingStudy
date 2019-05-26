@@ -5,18 +5,26 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class DrawFrustum : MonoBehaviour
 {
-    Camera c_camera;
+    [SerializeField] FrustumCulling frustum;
     [SerializeField] LineRenderer nearClip;
     [SerializeField] LineRenderer farClip;
-
-    private void Awake()
-    {
-        c_camera = GetComponent<Camera>();
-    }
+    [SerializeField] float lineWidth;
 
     private void Update()
     {
-        //Near Clip
+        if (frustum == null)
+            return;
+
+        if (!frustum.enabled)
+        {
+            nearClip.enabled = false;
+            farClip.enabled = false;
+            return;
+        }
+
+        nearClip.enabled = true;
+        farClip.enabled = true;
+
         DrawNearClip();
         DrawFarClip();
     }
@@ -27,8 +35,8 @@ public class DrawFrustum : MonoBehaviour
             return;
 
         nearClip.positionCount = 4;
-        nearClip.startWidth = 0.015f;
-        nearClip.endWidth = 0.015f;
+        nearClip.startWidth = lineWidth;
+        nearClip.endWidth = lineWidth;
         nearClip.material = Resources.Load<Material>("Materials/NearClip");
         nearClip.loop = true;
 
@@ -36,13 +44,13 @@ public class DrawFrustum : MonoBehaviour
             new Vector3[]
             {
                 Vector3.up + Vector3.left +
-                    transform.position + transform.forward * c_camera.nearClipPlane,
+                    transform.position + transform.forward * frustum.NearClipDistance,
                 Vector3.up + Vector3.right +
-                    transform.position + transform.forward * c_camera.nearClipPlane,
-                Vector3.down + Vector3.right +
-                    transform.position + transform.forward * c_camera.nearClipPlane,
-                Vector3.down + Vector3.left +
-                    transform.position + transform.forward * c_camera.nearClipPlane
+                    transform.position + transform.forward * frustum.NearClipDistance,
+                Vector3.down + Vector3.right +               
+                    transform.position + transform.forward * frustum.NearClipDistance,
+                Vector3.down + Vector3.left +                
+                    transform.position + transform.forward * frustum.NearClipDistance
             }
             );
     }
@@ -53,8 +61,8 @@ public class DrawFrustum : MonoBehaviour
             return;
 
         farClip.positionCount = 4;
-        farClip.startWidth = 0.015f;
-        farClip.endWidth = 0.015f;
+        farClip.startWidth = lineWidth;
+        farClip.endWidth = lineWidth;
         farClip.material = Resources.Load<Material>("Materials/NearClip");
         farClip.loop = true;
         
@@ -62,13 +70,13 @@ public class DrawFrustum : MonoBehaviour
             new Vector3[]
             {
                 Vector3.up + Vector3.left +
-                    transform.position + transform.forward * c_camera.farClipPlane,
-                Vector3.up + Vector3.right +                          
-                    transform.position + transform.forward * c_camera.farClipPlane,
-                Vector3.down + Vector3.right +                        
-                    transform.position + transform.forward * c_camera.farClipPlane,
-                Vector3.down + Vector3.left +                         
-                    transform.position + transform.forward * c_camera.farClipPlane
+                    transform.position + transform.forward * frustum.FarClipDistance,
+                Vector3.up + Vector3.right +                 
+                    transform.position + transform.forward * frustum.FarClipDistance,
+                Vector3.down + Vector3.right +               
+                    transform.position + transform.forward * frustum.FarClipDistance,
+                Vector3.down + Vector3.left +                
+                    transform.position + transform.forward * frustum.FarClipDistance
             }
             );
     }
