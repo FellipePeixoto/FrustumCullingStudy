@@ -25,19 +25,19 @@ public class DrawFrustum : MonoBehaviour
         nearClip.enabled = true;
         farClip.enabled = true;
 
-        DrawPlane(nearClip, frustum.NearClip);
-        DrawPlane(farClip, frustum.FarClip);
-        DrawPlane(top, frustum.Top);
-        DrawPlane(right, frustum.Right);
-        DrawPlane(bottom, frustum.Bottom);
-        DrawPlane(left, frustum.Left);
+        DrawPlane(nearClip, frustum.Planes[0]);
+        DrawPlane(farClip, frustum.Planes[1]);
+        DrawPlane(top, frustum.Planes[2]);
+        DrawPlane(right, frustum.Planes[3]);
+        DrawPlane(bottom, frustum.Planes[4]);
+        DrawPlane(left, frustum.Planes[5]);
 
-        Debug.DrawLine(frustum.Right.center, frustum.Right.center + (-frustum.Right.Normal));
-        Debug.DrawLine(frustum.Left.center, frustum.Left.center + (-frustum.Left.Normal));
-        Debug.DrawLine(frustum.Top.center, frustum.Top.center + (-frustum.Top.Normal));
-        Debug.DrawLine(frustum.Bottom.center, frustum.Bottom.center + (frustum.Bottom.Normal));
-        Debug.DrawLine(frustum.NearClip.center, frustum.NearClip.center + (-frustum.NearClip.Normal));
-        Debug.DrawLine(frustum.FarClip.center, frustum.FarClip.center + (frustum.FarClip.Normal));
+        Debug.DrawLine(frustum.Planes[3].center, frustum.Planes[3].center + (-frustum.Planes[3].Normal));
+        Debug.DrawLine(frustum.Planes[5].center, frustum.Planes[5].center + (-frustum.Planes[5].Normal));
+        Debug.DrawLine(frustum.Planes[2].center, frustum.Planes[2].center + (-frustum.Planes[2].Normal));
+        Debug.DrawLine(frustum.Planes[4].center, frustum.Planes[4].center + (frustum.Planes[4].Normal));
+        Debug.DrawLine(frustum.Planes[0].center, frustum.Planes[0].center + (-frustum.Planes[0].Normal));
+        Debug.DrawLine(frustum.Planes[1].center, frustum.Planes[1].center + (frustum.Planes[1].Normal));
     }
 
     public void DrawPlane(LineRenderer lineRenderer, PlaneStruct planeStr)

@@ -53,82 +53,86 @@ public class FrustumCulling : MonoBehaviour
     [SerializeField] bool isEnabled;
 
     PlaneStruct[] planes = new PlaneStruct[6];
-    PlaneStruct nearClip;
-    PlaneStruct farClip;
-    PlaneStruct top;
-    PlaneStruct right;
-    PlaneStruct bottom;
-    PlaneStruct left;
 
     public float FieldOfView { get => fieldOfView; }
     public float NearClipDistance { get => nearClipDistance; }
     public float FarClipDistance { get => farClipDistance; }
     public bool IsEnabled { get => isEnabled; }
-    public PlaneStruct NearClip { get => nearClip; }
-    public PlaneStruct FarClip { get => farClip; }
-    public PlaneStruct Top { get => top; }
-    public PlaneStruct Right { get => right; }
-    public PlaneStruct Bottom { get => bottom; }
-    public PlaneStruct Left { get => left; }
+    public PlaneStruct[] Planes { get => planes; }
 
     private void Update()
     {
-        nearClip = new PlaneStruct();
-        farClip = new PlaneStruct();
-        top = new PlaneStruct();
-        right = new PlaneStruct();
-        bottom = new PlaneStruct();
-        left = new PlaneStruct();
+        planes[0] = new PlaneStruct();
+        planes[1] = new PlaneStruct();
+        planes[2] = new PlaneStruct();
+        planes[3] = new PlaneStruct();
+        planes[4] = new PlaneStruct();
+        planes[5] = new PlaneStruct();
 
         if (!isEnabled)
             return;
 
-        nearClip.height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * nearClipDistance;
-        nearClip.width = nearClip.height * ratio;
+        planes[0].height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * nearClipDistance;
+        planes[0].width = planes[0].height * ratio;
 
-        farClip.height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * farClipDistance;
-        farClip.width = farClip.height * ratio;
+        planes[1].height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * farClipDistance;
+        planes[1].width = planes[1].height * ratio;
 
-        nearClip.center = transform.position + transform.forward.normalized * nearClipDistance;
-        nearClip.topLeft = nearClip.center + (transform.up * nearClip.height / 2) - (transform.right * nearClip.width / 2);
-        nearClip.topRight = nearClip.center + (transform.up * nearClip.height / 2) + (transform.right * nearClip.width / 2);
-        nearClip.bttRight = nearClip.center - (transform.up * nearClip.height / 2) + (transform.right * nearClip.width / 2);
-        nearClip.bttLeft = nearClip.center - (transform.up * nearClip.height / 2) - (transform.right * nearClip.width / 2);
+        planes[0].center = transform.position + transform.forward.normalized * nearClipDistance;
+        planes[0].topLeft = planes[0].center + (transform.up * planes[0].height / 2) - (transform.right * planes[0].width / 2);
+        planes[0].topRight = planes[0].center + (transform.up * planes[0].height / 2) + (transform.right * planes[0].width / 2);
+        planes[0].bttRight = planes[0].center - (transform.up * planes[0].height / 2) + (transform.right * planes[0].width / 2);
+        planes[0].bttLeft = planes[0].center - (transform.up * planes[0].height / 2) - (transform.right * planes[0].width / 2);
 
-        farClip.center = transform.position + transform.forward.normalized * farClipDistance;
-        farClip.topLeft = farClip.center + (transform.up * farClip.height / 2) - (transform.right * farClip.width / 2);
-        farClip.topRight = farClip.center + (transform.up * farClip.height / 2) + (transform.right * farClip.width / 2);
-        farClip.bttRight = farClip.center - (transform.up * farClip.height / 2) + (transform.right * farClip.width / 2);
-        farClip.bttLeft = farClip.center - (transform.up * farClip.height / 2) - (transform.right * farClip.width / 2);
+        planes[1].center = transform.position + transform.forward.normalized * farClipDistance;
+        planes[1].topLeft = planes[1].center + (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
+        planes[1].topRight = planes[1].center + (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
+        planes[1].bttRight = planes[1].center - (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
+        planes[1].bttLeft = planes[1].center - (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
 
-        top.topLeft = farClip.topLeft;
-        top.topRight = farClip.topRight;
-        top.bttRight = nearClip.topRight;
-        top.bttLeft = nearClip.topLeft;
-        top.CalcCenter();
+        planes[2].topLeft = planes[1].topLeft;
+        planes[2].topRight = planes[1].topRight;
+        planes[2].bttRight = planes[0].topRight;
+        planes[2].bttLeft = planes[0].topLeft;
+        planes[2].CalcCenter();
 
-        right.topLeft = farClip.topRight;
-        right.topRight = farClip.bttRight;
-        right.bttRight = nearClip.bttRight;
-        right.bttLeft = nearClip.topRight;
-        right.CalcCenter();
+        planes[3].topLeft = planes[1].topRight;
+        planes[3].topRight = planes[1].bttRight;
+        planes[3].bttRight = planes[0].bttRight;
+        planes[3].bttLeft = planes[0].topRight;
+        planes[3].CalcCenter();
 
-        bottom.topLeft = farClip.bttLeft;
-        bottom.topRight = farClip.bttRight;
-        bottom.bttRight = nearClip.bttRight;
-        bottom.bttLeft = nearClip.bttLeft;
-        bottom.CalcCenter();
+        planes[4].topLeft = planes[1].bttLeft;
+        planes[4].topRight = planes[1].bttRight;
+        planes[4].bttRight = planes[0].bttRight;
+        planes[4].bttLeft = planes[0].bttLeft;
+        planes[4].CalcCenter();
 
-        left.topLeft = farClip.bttLeft;
-        left.topRight = farClip.topLeft;
-        left.bttRight = nearClip.topLeft;
-        left.bttLeft = nearClip.bttLeft;
-        left.CalcCenter();
+        planes[5].topLeft = planes[1].bttLeft;
+        planes[5].topRight = planes[1].topLeft;
+        planes[5].bttRight = planes[0].topLeft;
+        planes[5].bttLeft = planes[0].bttLeft;
+        planes[5].CalcCenter();
 
         var bdnSphere = FindObjectsOfType<BoundingSphere>();
 
-        foreach(BoundingSphere b in bdnSphere)
+        foreach (PlaneStruct plane in planes)
         {
+            foreach (BoundingSphere b in bdnSphere)
+            {
+                if (plane.DistanceNormalNegative(b.position) < -b.radius)
+                {
+                    b.show = false;
+                    continue;
+                }
+                else if (plane.DistanceNormalNegative(b.position) < -b.radius)
+                {
+                    b.show = true;
+                    continue;
+                }
+
+                b.show = false;
+            }
         }
     }
 }
