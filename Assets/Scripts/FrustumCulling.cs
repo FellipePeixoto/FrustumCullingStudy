@@ -26,7 +26,7 @@ public class PlaneStruct
             return Vector3.Dot(-Normal, center);
         }
     }
-    
+
     public void CalcCenter()
     {
         center = (topLeft + topRight + bttRight + bttLeft) / 4;
@@ -116,22 +116,40 @@ public class FrustumCulling : MonoBehaviour
 
         var bdnSphere = FindObjectsOfType<BoundingSphere>();
 
-        foreach (PlaneStruct plane in planes)
+        for (int i = 0; i < 6; i++)
         {
             foreach (BoundingSphere b in bdnSphere)
             {
-                if (plane.DistanceNormalNegative(b.position) < -b.radius)
+                if (i == 1 || i == 4)
                 {
-                    b.show = false;
-                    continue;
-                }
-                else if (plane.DistanceNormalNegative(b.position) < -b.radius)
-                {
-                    b.show = true;
-                    continue;
-                }
+                    if (planes[i].DistanceNormalPositive(b.position) < -b.radius)
+                    {
+                        b.show = false;
+                        continue;
+                    }
+                    else if (planes[i].DistanceNormalPositive(b.position) < b.radius)
+                    {
+                        b.show = true;
+                        continue;
+                    }
 
-                b.show = false;
+                    b.show = false;
+                }
+                else
+                {
+                    if (planes[i].DistanceNormalNegative(b.position) < -b.radius)
+                    {
+                        b.show = false;
+                        continue;
+                    }
+                    else if (planes[i].DistanceNormalNegative(b.position) < b.radius)
+                    {
+                        b.show = true;
+                        continue;
+                    }
+
+                    b.show = false;
+                }
             }
         }
     }
