@@ -11,7 +11,7 @@ public class FrustumCulling : MonoBehaviour
     [SerializeField] float farClipDistance;
 
     bool enabled;
-    public class NearClipStruct
+    public class PlaneStruct
     {
         public float height;
         public float width;
@@ -21,31 +21,20 @@ public class FrustumCulling : MonoBehaviour
         public Vector3 bttRight;
         public Vector3 bttLeft;
     }
-    NearClipStruct nearClip;
-
-    public class FarClipStruct
-    {
-        public float height;
-        public float width;
-        public Vector3 center;
-        public Vector3 topLeft;
-        public Vector3 topRight;
-        public Vector3 bttRight;
-        public Vector3 bttLeft;
-    }
-    FarClipStruct farClip;
+    PlaneStruct nearClip;
+    PlaneStruct farClip;
 
     public float FieldOfView { get => fieldOfView; }
     public float NearClipDistance { get => nearClipDistance; }
     public float FarClipDistance { get => farClipDistance; }
     public bool Enabled { get => enabled; }
-    public NearClipStruct NearClip { get => nearClip; set => nearClip = value; }
-    public FarClipStruct FarClip { get => farClip; set => farClip = value; }
+    public PlaneStruct NearClip { get => nearClip; set => nearClip = value; }
+    public PlaneStruct FarClip { get => farClip; set => farClip = value; }
 
     private void Update()
     {
-        nearClip = new NearClipStruct();
-        farClip = new FarClipStruct();
+        nearClip = new PlaneStruct();
+        farClip = new PlaneStruct();
 
         nearClip.height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * nearClipDistance;
         nearClip.width = nearClip.height * ratio;
