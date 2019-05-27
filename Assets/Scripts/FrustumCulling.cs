@@ -116,41 +116,17 @@ public class FrustumCulling : MonoBehaviour
 
         var bdnSphere = FindObjectsOfType<BoundingSphere>();
 
-        for (int i = 0; i < 6; i++)
-        {
-            foreach (BoundingSphere b in bdnSphere)
-            {
-                if (i == 1 || i == 4)
-                {
-                    if (planes[i].DistanceNormalPositive(b.position) < -b.radius)
-                    {
-                        b.show = false;
-                        continue;
-                    }
-                    else if (planes[i].DistanceNormalPositive(b.position) < b.radius)
-                    {
-                        b.show = true;
-                        continue;
-                    }
+        if (bdnSphere != null && bdnSphere.Length == 0)
+            return;
 
-                    b.show = false;
-                }
-                else
-                {
-                    if (planes[i].DistanceNormalNegative(b.position) < -b.radius)
-                    {
-                        b.show = false;
-                        continue;
-                    }
-                    else if (planes[i].DistanceNormalNegative(b.position) < b.radius)
-                    {
-                        b.show = true;
-                        continue;
-                    }
-
-                    b.show = false;
-                }
-            }
-        }
+        //NearClip
+        Debug.Log("Near Clip: " + planes[0].DistanceNormalNegative(bdnSphere[0].position));
+        //Far Clip
+        Debug.Log("Far Clip: " + planes[1].DistanceNormalNegative(bdnSphere[0].position));
+        //Debug.Log(""+planes[2].DistanceNormalNegative(bdnSphere[0].position));
+        //Debug.Log(""+planes[3].DistanceNormalNegative(bdnSphere[0].position));
+        //Bottom Plane
+        Debug.Log("Bottom Plane: " + planes[4].DistanceNormalPositive(bdnSphere[0].position));
+        //Debug.Log(""+planes[5].DistanceNormalNegative(bdnSphere[0].position));
     }
 }
