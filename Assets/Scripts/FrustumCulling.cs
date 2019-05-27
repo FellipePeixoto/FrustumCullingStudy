@@ -132,6 +132,38 @@ public class FrustumCulling : MonoBehaviour
         if (bdnSphere != null && bdnSphere.Length == 0)
             return;
 
+        foreach (BoundingSphere b in bdnSphere)
+        {
+            bool[] vetVer = new bool[5] { true, true, true, true, true};
+
+            if (b.position.z + b.radius < transform.position.z + nearClipDistance ||
+                b.position.z - b.radius > transform.position.z + farClipDistance)
+            {
+                vetVer[0] = false;
+            }
+
+            for (int i = 2; i < 6; i++)
+            {
+                if (-planes[i].SignedDistance(b.position) < -b.radius)
+                {
+                    vetVer[i - 1] = false;
+                }
+            }
+
+            bool showornot = true;
+
+            foreach (bool vf in vetVer)
+            {
+                if (vf == false)
+                {
+                    showornot = false;
+                    break;
+                }
+            }
+
+            b.show = showornot;
+        }
+
         Debug.Log("Near Clip: " + planes[0].SignedDistance(bdnSphere[0].position) * -1);
         Debug.Log("Far Clip: " + planes[1].SignedDistance(bdnSphere[0].position) * -1);
         Debug.Log("Top: " + planes[2].SignedDistance(bdnSphere[0].position) * -1);
