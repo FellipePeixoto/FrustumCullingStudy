@@ -36,11 +36,7 @@ public class DrawFrustum : MonoBehaviour
         Debug.DrawLine(frustum.Planes[5].center, frustum.Planes[5].center + (-frustum.Planes[5].Normal));
         Debug.DrawLine(frustum.Planes[2].center, frustum.Planes[2].center + (-frustum.Planes[2].Normal));
         Debug.DrawLine(frustum.Planes[0].center, frustum.Planes[0].center + (-frustum.Planes[0].Normal));
-
-        //BUGADO
         Debug.DrawLine(frustum.Planes[4].center, frustum.Planes[4].center + (-frustum.Planes[4].Normal));
-
-        //BUGADO
         Debug.DrawLine(frustum.Planes[1].center, frustum.Planes[1].center + (-frustum.Planes[1].Normal));
     }
 

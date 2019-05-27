@@ -32,12 +32,7 @@ public class PlaneStruct
         center = (topLeft + topRight + bttRight + bttLeft) / 4;
     }
 
-    public float DistanceNormalNegative(Vector3 point)
-    {
-        return Vector3.Dot(-Normal, point);
-    }
-
-    public float DistanceNormalPositive(Vector3 point)
+    public float SignedDistance(Vector3 point)
     {
         return Vector3.Dot(Normal, point);
     }
@@ -61,6 +56,9 @@ public class FrustumCulling : MonoBehaviour
     public float NearClipDistance { get => nearClipDistance; }
     public float FarClipDistance { get => farClipDistance; }
     public bool IsEnabled { get => isEnabled; }
+    /// <summary>
+    /// 0 = near, 1 = far, 2 = top, 3 = right, 4 = bottom, 5 = left
+    /// </summary>
     public PlaneStruct[] Planes { get => planes; }
 
     private void Update()
@@ -126,11 +124,11 @@ public class FrustumCulling : MonoBehaviour
         if (bdnSphere != null && bdnSphere.Length == 0)
             return;
 
-        Debug.Log("Near Clip: " + planes[0].DistanceNormalNegative(bdnSphere[0].position));
-        Debug.Log("Far Clip: " + planes[1].DistanceNormalNegative(bdnSphere[0].position));
-        Debug.Log("Top: " + planes[2].DistanceNormalNegative(bdnSphere[0].position));
-        Debug.Log("Right: " + planes[3].DistanceNormalNegative(bdnSphere[0].position));
-        Debug.Log("Bottom Plane: " + planes[4].DistanceNormalPositive(bdnSphere[0].position));
-        Debug.Log("Left: " + planes[5].DistanceNormalNegative(bdnSphere[0].position));
+        Debug.Log("Near Clip: " + planes[0].SignedDistance(bdnSphere[0].position) * -1);
+        Debug.Log("Far Clip: " + planes[1].SignedDistance(bdnSphere[0].position) * -1);
+        Debug.Log("Top: " + planes[2].SignedDistance(bdnSphere[0].position) * -1);
+        Debug.Log("Right: " + planes[3].SignedDistance(bdnSphere[0].position) * -1);
+        Debug.Log("Bottom Plane: " + planes[4].SignedDistance(bdnSphere[0].position) * -1);
+        Debug.Log("Left: " + planes[5].SignedDistance(bdnSphere[0].position) * -1);
     }
 }
