@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSpeed: 1
   cameraSpeed: 4
-  cameraTransform: {fileID: 1657191559}
+  cameraTarget: {fileID: 1657191559}
 --- !u!1 &49401222
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     public float mouseSpeed = 1f;
     public float cameraSpeed = 4f;
-    public GameObject cameraTransform;
+    public GameObject cameraTarget;
 
     
     // Start is called before the first frame update
@@ -26,12 +26,12 @@ public class CameraController : MonoBehaviour
 
 
         if (Input.GetKey(KeyCode.W)){
-            transform.position += cameraTransform.transform.forward * (Time.deltaTime * cameraSpeed);
+            transform.position += cameraTarget.transform.forward * (Time.deltaTime * cameraSpeed);
         }
 
 
         if (Input.GetKey(KeyCode.S)) {
-            transform.position += Vector3.back * (Time.deltaTime * cameraSpeed);
+            transform.position -= cameraTarget.transform.forward * (Time.deltaTime * cameraSpeed);
         }
 
 
