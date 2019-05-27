@@ -32,12 +32,12 @@ public class DrawFrustum : MonoBehaviour
         DrawPlane(bottom, frustum.Planes[4]);
         DrawPlane(left, frustum.Planes[5]);
 
-        Debug.DrawLine(frustum.Planes[3].center, frustum.Planes[3].center + (-frustum.Planes[3].Normal));
-        Debug.DrawLine(frustum.Planes[5].center, frustum.Planes[5].center + (-frustum.Planes[5].Normal));
-        Debug.DrawLine(frustum.Planes[2].center, frustum.Planes[2].center + (-frustum.Planes[2].Normal));
-        Debug.DrawLine(frustum.Planes[0].center, frustum.Planes[0].center + (-frustum.Planes[0].Normal));
-        Debug.DrawLine(frustum.Planes[4].center, frustum.Planes[4].center + (-frustum.Planes[4].Normal));
-        Debug.DrawLine(frustum.Planes[1].center, frustum.Planes[1].center + (-frustum.Planes[1].Normal));
+        Debug.DrawLine(frustum.Planes[3].center, frustum.Planes[3].center + (-frustum.Planes[3].normal), Color.red);
+        Debug.DrawLine(frustum.Planes[5].center, frustum.Planes[5].center + (-frustum.Planes[5].normal), Color.red);
+        Debug.DrawLine(frustum.Planes[2].center, frustum.Planes[2].center + (-frustum.Planes[2].normal), Color.red);
+        Debug.DrawLine(frustum.Planes[0].center, frustum.Planes[0].center + (-frustum.Planes[0].normal), Color.red);
+        Debug.DrawLine(frustum.Planes[4].center, frustum.Planes[4].center + (-frustum.Planes[4].normal), Color.red);
+        Debug.DrawLine(frustum.Planes[1].center, frustum.Planes[1].center + (-frustum.Planes[1].normal), Color.red);
     }
 
     public void DrawPlane(LineRenderer lineRenderer, PlaneStruct planeStr)

@@ -11,19 +11,13 @@ public class PlaneStruct
     public Vector3 topRight;
     public Vector3 bttRight;
     public Vector3 bttLeft;
-    public Vector3 Normal
-    {
-        get
-        {
-            Vector3 dir = Vector3.Cross(topRight - topLeft, bttRight - topRight);
-            return dir.normalized;
-        }
-    }
+    public Vector3 normal;
+
     public float Plane
     {
         get
         {
-            return Vector3.Dot(-Normal, center);
+            return Vector3.Dot(-normal, center);
         }
     }
 
@@ -32,9 +26,15 @@ public class PlaneStruct
         center = (topLeft + topRight + bttRight + bttLeft) / 4;
     }
 
+    public void CalcNormal()
+    {
+        Vector3 dir = Vector3.Cross(topRight - topLeft, bttRight - topRight);
+        normal = dir.normalized;
+    }
+
     public float SignedDistance(Vector3 point)
     {
-        return Vector3.Dot(Normal, point);
+        return Vector3.Dot(normal, point);
     }
 }
 
@@ -63,6 +63,9 @@ public class FrustumCulling : MonoBehaviour
 
     private void Update()
     {
+        if (!isEnabled)
+            return;
+
         planes[0] = new PlaneStruct();
         planes[1] = new PlaneStruct();
         planes[2] = new PlaneStruct();
@@ -70,26 +73,27 @@ public class FrustumCulling : MonoBehaviour
         planes[4] = new PlaneStruct();
         planes[5] = new PlaneStruct();
 
-        if (!isEnabled)
-            return;
-
         planes[0].height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * nearClipDistance;
         planes[0].width = planes[0].height * ratio;
 
         planes[1].height = 2 * Mathf.Tan((Mathf.Deg2Rad * fieldOfView) / 2) * farClipDistance;
         planes[1].width = planes[1].height * ratio;
 
+        //Near plane
         planes[0].center = transform.position + transform.forward.normalized * nearClipDistance;
         planes[0].topLeft = planes[0].center + (transform.up * planes[0].height / 2) - (transform.right * planes[0].width / 2);
         planes[0].topRight = planes[0].center + (transform.up * planes[0].height / 2) + (transform.right * planes[0].width / 2);
         planes[0].bttRight = planes[0].center - (transform.up * planes[0].height / 2) + (transform.right * planes[0].width / 2);
         planes[0].bttLeft = planes[0].center - (transform.up * planes[0].height / 2) - (transform.right * planes[0].width / 2);
+        planes[0].CalcNormal();
 
+        //Far plane
         planes[1].center = transform.position + transform.forward.normalized * farClipDistance;
         planes[1].topLeft = planes[1].center + (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
         planes[1].topRight = planes[1].center + (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
         planes[1].bttRight = planes[1].center - (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
         planes[1].bttLeft = planes[1].center - (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
+        planes[1].CalcNormal();
 
         //Top plane
         planes[2].topLeft = planes[1].topRight;
@@ -97,6 +101,7 @@ public class FrustumCulling : MonoBehaviour
         planes[2].bttRight = planes[0].topRight;
         planes[2].bttLeft = planes[0].topLeft;
         planes[2].CalcCenter();
+        planes[2].CalcNormal();
 
         //Right Plane
         planes[3].topLeft = planes[1].topLeft;
@@ -104,6 +109,7 @@ public class FrustumCulling : MonoBehaviour
         planes[3].bttRight = planes[0].bttRight;
         planes[3].bttLeft = planes[0].topRight;
         planes[3].CalcCenter();
+        planes[3].CalcNormal();
 
         //Bottom Plane
         planes[4].topRight = planes[1].bttRight;
@@ -111,6 +117,7 @@ public class FrustumCulling : MonoBehaviour
         planes[4].bttLeft = planes[0].bttRight;
         planes[4].bttRight = planes[0].bttLeft;
         planes[4].CalcCenter();
+        planes[4].CalcNormal();
 
         //Left Plane
         planes[5].topLeft = planes[1].bttRight;
@@ -118,6 +125,7 @@ public class FrustumCulling : MonoBehaviour
         planes[5].bttRight = planes[0].topLeft;
         planes[5].bttLeft = planes[0].bttLeft;
         planes[5].CalcCenter();
+        planes[5].CalcNormal();
 
         var bdnSphere = FindObjectsOfType<BoundingSphere>();
 
