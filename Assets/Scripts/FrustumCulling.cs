@@ -52,6 +52,9 @@ public class FrustumCulling : MonoBehaviour
     [SerializeField] float farClipDistance;
     [SerializeField] bool isEnabled;
 
+    /// <summary>
+    /// 0 = near, 1 = far, 2 = top, 3 = right, 4 = bottom, 5 = left
+    /// </summary>
     PlaneStruct[] planes = new PlaneStruct[6];
 
     public float FieldOfView { get => fieldOfView; }
@@ -85,31 +88,35 @@ public class FrustumCulling : MonoBehaviour
         planes[0].bttLeft = planes[0].center - (transform.up * planes[0].height / 2) - (transform.right * planes[0].width / 2);
 
         planes[1].center = transform.position + transform.forward.normalized * farClipDistance;
-        planes[1].topLeft = planes[1].center + (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
-        planes[1].topRight = planes[1].center + (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
-        planes[1].bttRight = planes[1].center - (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
-        planes[1].bttLeft = planes[1].center - (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
+        planes[1].topLeft = planes[1].center + (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
+        planes[1].topRight = planes[1].center + (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
+        planes[1].bttRight = planes[1].center - (transform.up * planes[1].height / 2) - (transform.right * planes[1].width / 2);
+        planes[1].bttLeft = planes[1].center - (transform.up * planes[1].height / 2) + (transform.right * planes[1].width / 2);
 
-        planes[2].topLeft = planes[1].topLeft;
-        planes[2].topRight = planes[1].topRight;
+        //Top plane
+        planes[2].topLeft = planes[1].topRight;
+        planes[2].topRight = planes[1].topLeft;
         planes[2].bttRight = planes[0].topRight;
         planes[2].bttLeft = planes[0].topLeft;
         planes[2].CalcCenter();
 
-        planes[3].topLeft = planes[1].topRight;
-        planes[3].topRight = planes[1].bttRight;
+        //Right Plane
+        planes[3].topLeft = planes[1].topLeft;
+        planes[3].topRight = planes[1].bttLeft;
         planes[3].bttRight = planes[0].bttRight;
         planes[3].bttLeft = planes[0].topRight;
         planes[3].CalcCenter();
 
-        planes[4].topLeft = planes[1].bttLeft;
+        //Bottom Plane
         planes[4].topRight = planes[1].bttRight;
-        planes[4].bttRight = planes[0].bttRight;
-        planes[4].bttLeft = planes[0].bttLeft;
+        planes[4].topLeft = planes[1].bttLeft;
+        planes[4].bttLeft = planes[0].bttRight;
+        planes[4].bttRight = planes[0].bttLeft;
         planes[4].CalcCenter();
 
-        planes[5].topLeft = planes[1].bttLeft;
-        planes[5].topRight = planes[1].topLeft;
+        //Left Plane
+        planes[5].topLeft = planes[1].bttRight;
+        planes[5].topRight = planes[1].topRight;
         planes[5].bttRight = planes[0].topLeft;
         planes[5].bttLeft = planes[0].bttLeft;
         planes[5].CalcCenter();
@@ -119,14 +126,11 @@ public class FrustumCulling : MonoBehaviour
         if (bdnSphere != null && bdnSphere.Length == 0)
             return;
 
-        //NearClip
         Debug.Log("Near Clip: " + planes[0].DistanceNormalNegative(bdnSphere[0].position));
-        //Far Clip
         Debug.Log("Far Clip: " + planes[1].DistanceNormalNegative(bdnSphere[0].position));
-        //Debug.Log(""+planes[2].DistanceNormalNegative(bdnSphere[0].position));
-        //Debug.Log(""+planes[3].DistanceNormalNegative(bdnSphere[0].position));
-        //Bottom Plane
+        Debug.Log("Top: " + planes[2].DistanceNormalNegative(bdnSphere[0].position));
+        Debug.Log("Right: " + planes[3].DistanceNormalNegative(bdnSphere[0].position));
         Debug.Log("Bottom Plane: " + planes[4].DistanceNormalPositive(bdnSphere[0].position));
-        //Debug.Log(""+planes[5].DistanceNormalNegative(bdnSphere[0].position));
+        Debug.Log("Left: " + planes[5].DistanceNormalNegative(bdnSphere[0].position));
     }
 }
